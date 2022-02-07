@@ -48,4 +48,17 @@ feature {NONE} -- Implementation
 	matrix_a: NATURAL_64 = 0xB5026F5AA96619E9
 			-- 2nd value in the twist transformation matrix (see `Mag_1')
 
+	jump_strings: ARRAY [STRING_8]
+			-- Helper feature to ease the creation of `jump_chars'
+			-- (See https://github.com/sharase/melg-64)
+		do
+			check
+				do_not_call: false then
+					-- because feature irrelavent for this class
+			end
+			Result := <<
+				"  fix me  "
+				>>
+		end
+
 end

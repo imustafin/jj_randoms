@@ -1,19 +1,26 @@
-note
+﻿note
 	description: "[
 		A 32-bit implementation of the Mersenne Twister algorithm originally
 		described in "Mersenne Twister:  A 623-Dimensionally Equidistributed
 		Uniform Pseudorandom Number Generator" by Makoto Matsumoto and Takuji
 		Nishimura.
-        (See http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html)
+
+		This class generates random numbers of type {NATURAL_32}
+		
+		This implementation of the algorithm is modeled after the C-code
+		developed by Matsumot and Takuji.
+		See:
+		  http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/emt.html and
+		  http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/emt19937ar.html
 
 		This class adapts the code to a more Eiffel-like interface.
-		1) Getting a random number does not advance the state.  Calling
-		   `item' multiple times without calling `forth' will return
-		   the same value.
-		2) Feature `forth' advances the state by incrementing the index
-		   and then calling `twist'.
-		3) Feature `twist' advances the state vector.
-		4) The "tempering" equations are in feature `item'.
+		  1) Getting a random number does not advance the state.  Calling
+		     `item' multiple times without calling `forth' will return
+		     the same value.
+		  2) Feature `forth' advances the state by incrementing the index
+		     and then calling `twist'.
+		  3) Feature `twist' advances the state vector.
+		  4) The "tempering" equations are in feature `item'.
 	]"
 	author:    "Jimmy J. Johnson"
 	date:      "2/6/22"
@@ -116,6 +123,45 @@ feature -- Access
 			end
 		end
 
+	item_31: NATURAL_32
+			-- A random number in the closed interval [0, Max_value - 1]
+		do
+			Result := item |>> 1
+		end
+
+	real_item: REAL_32
+			-- A random number in the closed interval [0, 1]
+		require
+			not_constrained: not is_constrained
+		do
+			Result := ((item |>> 11) * (1.0 / 4294967295.0)).truncated_to_real
+		ensure
+			result_big_enough: Result >= 0.0
+			Result_small_enought: Result <= 1.0
+		end
+
+	real_item_semi_open: REAL_32
+			-- A random number in the semi-open interval [0, 1)
+		require
+			not_constrained: not is_constrained
+		do
+			Result := ((item |>> 11) * (1.0 / 4294967296.0)).truncated_to_real
+		ensure
+			result_big_enough: Result >= 0.0
+			Result_small_enought: Result < 1.0
+		end
+
+	real_item_open: REAL_32
+			-- A random number in the open interval (0, 1)
+		require
+			not_constrained: not is_constrained
+		do
+			Result := (((item |>> 12) + 0.5) * (1.0 / 4294967296.0)).truncated_to_real
+		ensure
+			result_big_enough: Result > 0.0
+			Result_small_enought: Result < 1.0
+		end
+
 	lower: NATURAL_32
 			-- The smallest value returned by `item'.
 			-- See `set_range'.
@@ -174,7 +220,8 @@ feature -- Element change
 feature -- Basic operations
 
 	forth
-			-- Increase the `index' by one.
+			-- Advance the state, so next call to `item' returns
+			-- a new number.
 		do
 			index := index + 1
 			if index = n then
@@ -183,38 +230,6 @@ feature -- Basic operations
 		ensure
 			index_incremented: ((old index = n - 1) implies index = 0) or else
 								 index = old index + 1
-		end
-
-	show
-			-- For testing
-		local
-			i, j: INTEGER
-		do
-			io.put_string ("{" + generating_type + "} %N")
-			io.put_string ("    range = [" + lower.out + ", " + upper.out + "] %N")
-			io.put_string ("    index = " + index.out + "%N")
-			io.put_string ("    item = " + item.out + "%N")
-			from
-				i := 0
-				j := 1
-			until i >= 10 --mt.count
-			loop
-				io.put_string ("mt[" + i.out + "] = " + mt[i].out + "%T")
-				j := j + 1
-				if j > 5 then
-					io.put_string ("%N")
-					j := 1
-				end
-				i := i + 1
-			end
-			io.put_string ("   ...  %N")
-			from i := n - 3
-			until i>= n
-			loop
-				io.put_string ("mt[" + i.out + "] = " + mt[i].out + "%T")
-				i := i + 1
-			end
-			io.put_string ("%N%N%N")
 		end
 
 feature -- Status report

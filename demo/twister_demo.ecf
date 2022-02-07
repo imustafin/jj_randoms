@@ -19,10 +19,21 @@
 			<concurrency use="none"/>
 			<void_safety use="all"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<class_option class="EXECUTION_ENVIRONMENT">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+		</library>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<cluster name="classes" location="..\classes\" recursive="true"/>
+		<cluster name="classes" location="..\classes\" recursive="true">
+			<class_option class="MELG">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+		</cluster>
 		<cluster name="demo" location="..\demo\">
+			<class_option class="TWISTER_DEMO">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
 			<file_rule>
 				<exclude>/.git$</exclude>
 				<exclude>/.svn$</exclude>
@@ -33,7 +44,11 @@
 				<exclude>/timing$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="tests" location="..\tests\"/>
+		<cluster name="tests" location="..\tests\">
+			<class_option class="MELG_TESTS">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+		</cluster>
 		<override name="override" location="..\override\"/>
 	</target>
 </system>

@@ -161,6 +161,12 @@ feature -- Access
 			end
 		end
 
+	item_63: NATURAL_64
+			-- A random number in the closed interval [0, Max_value - 1]
+		do
+			Result := item |>> 1
+		end
+
 	real_item: REAL_64
 			-- A random number in the closed interval [0, 1]
 		require
@@ -253,7 +259,8 @@ feature -- Element change
 feature -- Basic operations
 
 	forth
-			-- Advance the state forward by one step
+			-- Advance the state, so next call to `item' returns
+			-- a new number.
 		do
 			index := index + 1
 			if index >= mt.count then
@@ -265,36 +272,46 @@ feature -- Basic operations
 			index_wrapped: old index = nn - 1 implies index = 0
 		end
 
-	show
-			-- For testing
+	jump
+			-- Advance Current's state equivalent to 2^256 calls to `forth'.
+			-- Harase & Kimoto's GitHub page says, "The jump-ahead algorithm
+			-- is used [SIC] to obtain disjoint streams in parallel computing."
+			-- See https://github.com/sharase/melg-64.
 		local
-			i, j: INTEGER
+			melg_loc: like Current
+			i, j: INTEGER_32
+			bits, mask: INTEGER_32
 		do
-			io.put_string ("{" + generating_type + "} %N")
-			io.put_string ("    range = [" + lower.out + ", " + upper.out + "] %N")
-			io.put_string ("    index = " + index.out + "%N")
-			io.put_string ("    item = " + item.out + "%N")
-			from
-				i := 0
-				j := 1
-			until i >= 10 --mt.count
+				-- Initialize the local generator, basicly to zero
+			melg_loc := Current.deep_twin
+			melg_loc.lung := 0
+			from i := 0
+			until i >= melg_loc.mt.count
 			loop
-				io.put_string ("mt[" + i.out + "] = " + mt[i].out + "%T")
-				j := j + 1
-				if j > 5 then
-					io.put_string ("%N")
-					j := 1
+				melg_loc.mt[i] := 0
+				i := i + 1
+			end
+			melg_loc.index := index
+				-- Initialation of local complete
+			from i := 0
+			until i >= jump_chars.count
+			loop
+				bits := jump_chars[i]
+				bits := bits & 0x0f
+				mask := 0x08
+				from j := 0
+				until j >= 4
+				loop
+					if (bits & mask) /= 0 then
+						add (melg_loc)
+					end
+					forth
+					mask := mask |>> 1
+					j := j + 1
 				end
 				i := i + 1
 			end
-			io.put_string ("   ...  %N")
-			from i := nn - 3
-			until i>= nn
-			loop
-				io.put_string ("mt[" + i.out + "] = " + mt[i].out + "%T")
-				i := i + 1
-			end
-			io.put_string ("%N%N%N")
+			deep_copy (melg_loc)
 		end
 
 feature -- Status report
@@ -310,6 +327,9 @@ feature {NONE} -- Implementation
 			-- Takes the place of the four "case_x" methods in the
 			-- original C code
 			-- Call ONLY ONCE after `index' changes in `forth'
+		require
+			index_big_enough: index >= 0
+			index_small_enough: index < mt.count
 		local
 			k: INTEGER_32	-- added to index in `lung' equation
 			i: INTEGER_32	-- index of "next" state value
@@ -332,6 +352,8 @@ feature {NONE} -- Implementation
 			x := (mt[index] & Upper_mask) | (mt[k] & Lower_mask)
 			lung := (x |>> 1) ⊕ Mag_1 [(x & One).to_integer_32] ⊕ mt[i] ⊕ Mat_3_neg (neg_shift, lung)
 			mt [index] := x ⊕ Mat_3_pos (pos_shift, lung)
+		ensure then
+			index_set: index = old index
 		end
 
 feature {NONE} -- Implementation
@@ -344,15 +366,6 @@ feature {NONE} -- Implementation
 
 	w: INTEGER_32 = 64
 			-- Number of bits in the implementation
-
-	mt: SPECIAL [NATURAL_64]
-			-- The state array
-
-	index: INTEGER_32
-			-- Index into the state array, `mt'
-
-	lung: NATURAL_64
-			-- Extra state variable
 
 	nn: INTEGER_32
 			-- Number of elements in the state array
@@ -441,6 +454,209 @@ feature {NONE} -- Implementation
 		ensure
 			item_one_is_zero: Result.at (0) = 0
 			item_two_is_correct: Result.at (1) = Matrix_a
+		end
+
+	jump_strings: ARRAY [STRING_8]
+			-- Helper feature to ease the creation of `jump_chars'
+			-- (See https://github.com/sharase/melg-64)
+			-- This should be effected by inheriting from the
+			-- appropriate constants class
+		deferred
+		end
+
+	jump_chars: SPECIAL [NATURAL_8]
+			-- Used in the `jump' feature.  Called "jump_strings"
+			-- by Harase and Kimoto.
+			-- (See https://github.com/sharase/melg-64)
+			-- The Result is built from feature `jump_strings' in
+			-- the corresponding constants class.
+		local
+			i, j, k: INTEGER
+			r: REAL_64
+			c: INTEGER
+			s: STRING_8
+			js: like jump_strings
+		once ("OBJECT")
+			r := ((nn * w + p) / 4.0).ceiling_real_64
+			check
+				c_small_enough: r <= {INTEGER_32}.max_value
+				c_big_enough: r >= 0
+					-- because of known values of `nn', `w', and `p'
+			end
+			c := r.truncated_to_integer
+			create Result.make_filled (0, c)
+				-- Build Result from `jump_string' one char at a time
+			js := jump_strings
+			from
+				i := 1
+				k := 0
+			until i > js.count
+			loop
+				s := js[i]
+				from j := 1
+				until j > s.count
+				loop
+					Result[k] := char_to_hex (s[j])
+					j := j + 1
+					k := k + 1
+				end
+				i := i + 1
+			end
+		end
+
+	char_to_hex (a_char: CHARACTER_8): NATURAL_8
+			-- Convert `a_char' to a hexadecimal value
+		require
+			valid_character: a_char.is_hexa_digit
+		do
+			inspect a_char
+			when '0' then
+				Result := 0
+			when '1' then
+				Result := 1
+			when '2' then
+				Result := 2
+			when '3' then
+				Result := 3
+			when '4' then
+				Result := 4
+			when '5' then
+				Result := 5
+			when '6' then
+				Result := 6
+			when '7' then
+				Result := 7
+			when '8' then
+				Result := 8
+			when '9' then
+				Result := 9
+			when 'a', 'A' then
+				Result := 10
+			when 'b', 'B' then
+				Result := 11
+			when 'c', 'C' then
+				Result := 12
+			when 'd', 'D' then
+				Result := 13
+			when 'e', 'E' then
+				Result := 14
+			when 'f', 'F' then
+				Result := 15
+			else
+				check
+					should_not_happen: False
+						-- because of precondition
+					end
+			end
+		ensure
+			result_in_range: Result >= 0 and Result <= 15
+		end
+
+	add (a_other: like Current)
+			-- Updates the state of `a_melg' melding with Current
+			-- without changing Current.
+			-- Feature `jump' passes a copy of Current to this feature.
+			-- (See https://github.com/sharase/melg-64)
+		require
+			not_current: not (a_other = Current)
+		local
+			i: INTEGER_32
+			n1, n2: INTEGER_32
+			diff_1, diff_2: INTEGER_32
+		do
+			a_other.lung := a_other.lung ⊕ lung
+			n1 := a_other.index + 1
+			n2 := index + 1
+				-- Add the states
+			if n1 <= n2 then
+				diff_1 := nn - n2 + n1
+				diff_2 := n2 - n1
+					-- Sub-loop 1
+				from i := n1
+				until i >= diff_1
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i + diff_2]
+					i := i + 1
+				end
+					-- Sub-loop 2
+				from
+				until i >= nn
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i - diff_1]
+					i := i + 1
+				end
+					-- Sub-loop 3
+				from i := 0
+				until i >= n1
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i + diff_2]
+					i := i + 1
+				end
+			else
+				diff_1 := nn - n1 + n2
+				diff_2 := n1 - n2
+					-- Sub-loop 1
+				from i := n1
+				until i >= nn
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i - diff_2]
+					i := i + 1
+				end
+					-- Sub-loop 2
+				from i := 0
+				until i >= diff_2
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i + diff_1]
+					i := i + 1
+				end
+					-- Sub-loop 3
+				from
+				until i >= n1
+				loop
+					a_other.mt[i] := a_other.mt[i] ⊕ mt[i - diff_2]
+					i := i + 1
+				end
+			end
+		end
+
+feature {MELG} -- Implementation (state selectively exported for `jump' and `add')
+
+	mt: SPECIAL [NATURAL_64]
+			-- The state array
+
+	index: INTEGER_32 assign set_index
+			-- Index into the state array, `mt'
+
+	set_index (a_index: INTEGER_32)
+			-- Change `index'
+		do
+			index := a_index
+		ensure
+			index_assigned: index = a_index
+		end
+
+	lung: NATURAL_64 assign set_lung
+			-- Extra state variable
+
+	set_lung (a_lung: NATURAL_64)
+			-- Change `lung'
+			-- Setter feature used by `add' to change the state
+		do
+			lung := a_lung
+		ensure
+			lung_assigned: lung = a_lung
+		end
+
+	set_mt_item (a_value: NATURAL_64; a_index: INTEGER_32)
+			-- Change the value of `a_index'th item of `mt'
+			-- Setter feature used by `add' to change the state
+		require
+			index_big_enough: a_index >= 0
+			index_small_enough: a_index < mt.count
+		do
+			mt[a_index] := a_value
+		ensure
+			item_assigned: mt[a_index] = a_value
 		end
 
 feature {NONE} -- Implementation

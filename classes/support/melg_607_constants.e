@@ -43,4 +43,16 @@ feature {NONE} -- Implementation
 	matrix_a: NATURAL_64 = 0x81f1fd68012348bc
 			-- 2nd value in the twist transformation matrix (see `Mag_1')
 
+	jump_strings: ARRAY [STRING_8]
+			-- Helper feature to ease the creation of `jump_chars'
+			-- (See https://github.com/sharase/melg-64)
+		do
+			Result := <<
+				"f3d27aef5c025caca71e8dfb38d8e7ce5fe0d46c04317c6f50",
+				"ef41c5edce6ebf48fe2929dd0ca41af901d536b52ae616662b",
+				"620bad0a18060e54c127d729bdcb439f7ee398bec8e7195562",
+				"9c"
+				>>
+		end
+
 end

@@ -7,9 +7,6 @@ note
 		The test files were produced by the the code developed
 		by Shin Harase and Takamitsu Kimoto and available at
 		https://github.com/sharase/melg-64.
-
-		Only the first 1000 numbers are checked, becasue the
-		"melg_jump"	method was not implemented in {MELG}.
 	]"
 	author:    "Jimmy J. Johnson"
 	date:      "2/6/22"
@@ -33,8 +30,6 @@ feature -- Basic operations
 			-- Run all the test features
 		do
 				-- 'from_array, etc.
---			twister_64
-
 			melg_607
 			melg_1279
 			melg_2281
@@ -43,34 +38,32 @@ feature -- Basic operations
 			melg_19937
 			melg_44497
 				-- with constraints
-			twister_constrained
 			melg_607_constrained
 			melg_4253_constrained
 			melg_19937_constrained
 				-- check real intervals
-			melg_19937_interval
+--			melg_19937_interval
 		end
 
 feature -- Basic operations
-
-	twister_64
-			-- Compare first 1000 randoms to known values
-		local
-			rng: TWISTER_64
-		do
-			create rng.from_array (init_array)
-			divider (rng.generating_type)
-			test_1000 (rng, directory + "mt19937-64.out")
-		end
 
 	melg_607
 			-- Compare first 1000 randoms to known values
 		local
 			rng: MELG_607
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg607-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg607-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg607-64.out")
 		end
 
 	melg_1279
@@ -78,9 +71,18 @@ feature -- Basic operations
 		local
 			rng: MELG_1279
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg1279-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg1279-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg1279-64.out")
 		end
 
 	melg_2281
@@ -88,9 +90,18 @@ feature -- Basic operations
 		local
 			rng: MELG_2281
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg2281-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg2281-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg2281-64.out")
 		end
 
 	melg_4253
@@ -98,9 +109,18 @@ feature -- Basic operations
 		local
 			rng: MELG_4253
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg4253-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg4253-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg4253-64.out")
 		end
 
 	melg_11213
@@ -108,9 +128,18 @@ feature -- Basic operations
 		local
 			rng: MELG_11213
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg11213-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg11213-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg11213-64.out")
 		end
 
 	melg_19937
@@ -118,9 +147,18 @@ feature -- Basic operations
 		local
 			rng: MELG_19937
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg19937-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg19937-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg19937-64.out")
 		end
 
 	melg_44497
@@ -128,22 +166,21 @@ feature -- Basic operations
 		local
 			rng: MELG_44497
 		do
+				-- {NATURAL_64}
 			create rng.from_array (init_array)
-			divider (rng.generating_type)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers")
 			test_1000 (rng, directory + "melg44497-64.out")
+				-- {REAL_64}
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {REAL_64} numbers")
+			test_reals (rng, directory + "melg44497-64.out")
+				-- `jump'
+			create rng.from_array (init_array)
+			divider (rng.generating_type + "  1000 {NATURAL_64} numbers AFTER jump")
+			test_jump (rng, directory + "melg44497-64.out")
 		end
 
 feature -- Basic operations
-
-	twister_constrained
-			-- Check random generation in a restricted range
-		local
-			rng: TWISTER_64
-		do
-			create rng
-			divider (rng.generating_type + " constrained")
-			test_constrained (rng, 100, 150)
-		end
 
 	melg_607_constrained
 			-- Check random generation in a restricted range
@@ -275,8 +312,8 @@ feature {NONE} -- Implementation
 		end
 
 	test_1000 (a_rng: MELG; a_filename: STRING_8)
-			-- Test the number generation for the first 1000 numbers
-			-- produced by a_rng against the values in the file
+			-- Test the number generation for the first 1000 {NATURAL_64}
+			-- numbers produced by a_rng against the values in the file
 			-- named `a_filename'.
 			-- This feature combined with the calling features `melg_607',
 			-- `melg_1279', etc, test {MELG} features `initialize',
@@ -288,7 +325,6 @@ feature {NONE} -- Implementation
 			s: STRING
 			i: INTEGER
 			n: NATURAL_64
-			r: REAL_64
 			failed: BOOLEAN
 		do
 			create env
@@ -297,28 +333,30 @@ feature {NONE} -- Implementation
 			if not failed then
 					-- Check the 1000 random numbers
 				f.read_line
---				check
---					expected_line: f.last_string ~ "1000 outputs of genrand64_int64()"
---						-- because that is what is in the file
---				end
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_int64()"
+						-- because that is what is in the file
+				end
 				io.put_string ("%T Checking first to 10th random number %N")
 				from i := 1
 				until i > 10
 				loop
 					f.read_natural_64
 					n := f.last_natural_64
+					if i > 1 then
+						procedure (agent a_rng.forth, "forth")
+					end
 					function (agent a_rng.item, "item", n)
-					procedure (agent a_rng.forth, "forth")
 					i := i + 1
 				end
 				io.put_string ("%T Checking 11th through 996th random number...   %N")
 				from
 				until i > 997
 				loop
+					a_rng.forth
 					f.read_natural_64
 					n := f.last_natural_64
 					assert ("item check: ", a_rng.item = n)
-					a_rng.forth
 					i := i + 1
 				end
 				io.put_string ("%T Checking 998th to 1000th random number %N")
@@ -327,21 +365,60 @@ feature {NONE} -- Implementation
 				loop
 					f.read_natural_64
 					n := f.last_natural_64
-					function (agent a_rng.item, "item", n)
 					procedure (agent a_rng.forth, "forth")
+					function (agent a_rng.item, "item", n)
 					i := i + 1
 				end
-				---------------------------------------------------------
-					-- Check the 1000 REAL random numbers					
+				f.close
+			end
+		end
+
+	test_reals (a_rng: MELG; a_filename: STRING_8)
+			-- Test the number generation for the first 1000 {REAL_64}
+			-- numbers produced by a_rng against the values in the file
+			-- named `a_filename'.
+			-- This feature combined with the calling features `melg_607',
+			-- `melg_1279', etc, test {MELG} features `initialize',
+			-- `from_array', `twist', `forth', and `item'.
+			-- Show the first 10 and the last 3 for visual confirmation.
+		local
+			f: PLAIN_TEXT_FILE
+			env: EXECUTION_ENVIRONMENT
+			s: STRING
+			i: INTEGER
+			r: REAL_64
+			failed: BOOLEAN
+		do
+			create env
+			s := env.current_working_path.out
+			create f.make_open_read (a_filename)
+			if not failed then
+					-- Skip the text line
+				f.read_line
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_int64()"
+						-- because that is what is in the file
+				end
+					-- Skip the 1000 {NATURAL_64} values at beginning of file
+					-- and advance the generator
+				from i := 1
+				until i > 1000
+				loop
+					f.read_natural_64
+					if i > 1 then
+						a_rng.forth
+					end
+					i := i + 1
+				end
+					-- Skip the blank line and text line
 				f.read_line
 				f.read_line
 				f.read_line
 --				io.put_string ("  after read_line   last_string = '" + f.last_string + "' %N")
---				check
---					expected_line: f.last_string ~ "1000 outputs of genrand64_res53()"
---						-- because that is what is in the file
---				end
-				io.put_string ("%N")
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_res53()"
+						-- because that is what is in the file
+				end
 				io.put_string ("  -- {REAL_64} checks use `very_close' from {SAFE_DOUBLE_MATH) --%N")
 				io.put_string ("%T Checking first to 10th REAL random number %N")
 				from i := 1
@@ -349,8 +426,8 @@ feature {NONE} -- Implementation
 				loop
 					f.read_real_64
 					r := f.last_real_64
-					function (agent a_rng.real_item, "item", r)
 					procedure (agent a_rng.forth, "forth")
+					function (agent a_rng.real_item, "item", r)
 					i := i + 1
 				end
 				io.put_string ("%T Checking 11th through 996th REAL random number...   %N")
@@ -359,8 +436,8 @@ feature {NONE} -- Implementation
 				loop
 					f.read_real_64
 					r := f.last_real_64
-					assert ("item check: ", close_enough (a_rng.real_item, r))
 					a_rng.forth
+					assert ("item check: ", close_enough (a_rng.real_item, r))
 					i := i + 1
 				end
 				io.put_string ("%T Checking 998th to 1000th REAL random number %N")
@@ -369,8 +446,111 @@ feature {NONE} -- Implementation
 				loop
 					f.read_real_64
 					r := f.last_real_64
-					function (agent a_rng.real_item, "item", r)
 					procedure (agent a_rng.forth, "forth")
+					function (agent a_rng.real_item, "item", r)
+					i := i + 1
+				end
+				f.close
+			end
+		end
+
+	test_jump (a_rng: MELG; a_filename: STRING_8)
+			-- Test the number generation for the first 1000 {NATURAL_64}
+			-- numbers produced by a_rng against the values in the file
+			-- named `a_filename' AFTER calling feature `jump'.
+			-- This feature combined with the calling features `melg_607',
+			-- `melg_1279', etc, test {MELG} features `initialize',
+			-- `from_array', `twist', `forth', and `item'.
+			-- Show the first 10 and the last 3 for visual confirmation.
+		local
+			f: PLAIN_TEXT_FILE
+			env: EXECUTION_ENVIRONMENT
+			s: STRING
+			i: INTEGER
+			n: NATURAL_64
+			failed: BOOLEAN
+		do
+			io.put_string ("  --  Feature `jump' may take a while if not in finalized mode  -- %N")
+			create env
+			s := env.current_working_path.out
+			create f.make_open_read (a_filename)
+			if not failed then
+					-- Skip the text line
+				f.read_line
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_int64()"
+						-- because that is what is in the file
+				end
+					-- Skip the 1000 {NATURAL_64} values at beginning of file
+					-- and advance the generator
+				from i := 1
+				until i > 1000
+				loop
+					f.read_natural_64
+					if i > 1 then
+						a_rng.forth
+					end
+					i := i + 1
+				end
+					-- Skip the blank line and text line
+				f.read_line
+				f.read_line
+				f.read_line
+--				io.put_string ("  after read_line   last_string = '" + f.last_string + "' %N")
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_res53()"
+						-- because that is what is in the file
+				end
+				from i := 1
+				until i > 1000
+				loop
+					f.read_real_64
+					a_rng.forth
+					i := i + 1
+				end
+					-- Skip the blank line and two text line
+				f.read_line
+--				io.put_string ("  after read_line   last_string = '" + f.last_string + "' %N")
+				check
+					expected_line: f.last_string ~ "jump ahead by 2^256 steps"
+						-- because that is what is in the file
+				end
+				f.read_line
+--				io.put_string ("  after read_line   last_string = '" + f.last_string + "' %N")
+				check
+					expected_line: f.last_string ~ "1000 outputs of genrand64_int64()"
+						-- because that is what is in the file
+				end
+					-- Call `jump' and then begin testing				
+				procedure (agent a_rng.jump, "jump")
+				io.put_string ("%T Checking first to 10th random number %N")
+				from i := 1
+				until i > 10
+				loop
+					f.read_natural_64
+					n := f.last_natural_64
+					procedure (agent a_rng.forth, "forth")
+					function (agent a_rng.item, "item", n)
+					i := i + 1
+				end
+				io.put_string ("%T Checking 11th through 996th random number...   %N")
+				from
+				until i > 997
+				loop
+					f.read_natural_64
+					n := f.last_natural_64
+					a_rng.forth
+					assert ("item check: ", a_rng.item = n)
+					i := i + 1
+				end
+				io.put_string ("%T Checking 998th to 1000th random number %N")
+				from
+				until i > 1000
+				loop
+					f.read_natural_64
+					n := f.last_natural_64
+					procedure (agent a_rng.forth, "forth")
+					function (agent a_rng.item, "item", n)
 					i := i + 1
 				end
 				f.close
