@@ -129,34 +129,37 @@ feature -- Access
 			Result := item |>> 1
 		end
 
-	real_item: REAL_32
+	real_item: REAL_64
 			-- A random number in the closed interval [0, 1]
 		require
 			not_constrained: not is_constrained
 		do
-			Result := ((item |>> 11) * (1.0 / 4294967295.0)).truncated_to_real
+				-- Implemented in C, because Eiffel did not work
+			Result := c_real_item (item)
 		ensure
 			result_big_enough: Result >= 0.0
 			Result_small_enought: Result <= 1.0
 		end
 
-	real_item_semi_open: REAL_32
+	real_item_semi_open: REAL_64
 			-- A random number in the semi-open interval [0, 1)
 		require
 			not_constrained: not is_constrained
 		do
-			Result := ((item |>> 11) * (1.0 / 4294967296.0)).truncated_to_real
+				-- Implemented in C, because Eiffel did not work
+			Result := c_real_item_semi_open (item)
 		ensure
 			result_big_enough: Result >= 0.0
 			Result_small_enought: Result < 1.0
 		end
 
-	real_item_open: REAL_32
+	real_item_open: REAL_64
 			-- A random number in the open interval (0, 1)
 		require
 			not_constrained: not is_constrained
 		do
-			Result := (((item |>> 12) + 0.5) * (1.0 / 4294967296.0)).truncated_to_real
+				-- Implemented in C, because Eiffel did not work
+			Result := c_real_item_open (item)
 		ensure
 			result_big_enough: Result > 0.0
 			Result_small_enought: Result < 1.0
@@ -426,6 +429,53 @@ feature {NONE} -- Implementation
 				mt[0] = 0x80000000UL;
 			}"
 		end
+
+	c_real_item (a_value: NATURAL_32): REAL_64
+			-- A random number in the closed interval [0, 1]
+			-- Use C to convert `item' to a real.
+		external
+			"C inline"
+		alias
+			"{
+				EIF_NATURAL_32 v;
+				EIF_REAL_32 r;
+				v = (EIF_NATURAL_32) $a_value;
+				r = v * (1.0/4294967295.0); 
+				return (EIF_REAL_64) r;
+			}"
+		end
+
+	c_real_item_semi_open (a_value: NATURAL_32): REAL_64
+			-- A random number in the semi-open interval [0, 1)
+			-- Use C to convert `item' to a real.
+		external
+			"C inline"
+		alias
+			"{
+				EIF_NATURAL_32 v;
+				EIF_REAL_32 r;
+				v = (EIF_NATURAL_32) $a_value;
+				r = v * (1.0/4294967296.0); 
+				return (EIF_REAL_64) r;
+			}"
+		end
+
+	c_real_item_open (a_value: NATURAL_32): REAL_64
+			-- A random number in the open interval [0, 1]
+			-- Use C to convert `item' to a real.
+		external
+			"C inline"
+		alias
+			"{
+				EIF_NATURAL_32 v;
+				EIF_REAL_32 r;
+				v = (EIF_NATURAL_32) $a_value;
+				r = (((double) v) + 0.5) * (1.0 / 4294967296.0); 
+				r = v * (1.0/4294967295.0); 
+				return (EIF_REAL_64) r;
+			}"
+		end
+
 
 invariant
 

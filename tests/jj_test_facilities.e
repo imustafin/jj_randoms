@@ -106,7 +106,11 @@ feature {NONE} -- Implementation
 			ans := a_function.item (a_function.operands)
 			if attached {REAL_64} ans as a then
 				if attached {REAL_64} a_expected as e then
-					is_ok := very_close (a, e)
+					is_ok := close_enough_with_tolerance (a, e, 0.0000001)
+				end
+			elseif attached {REAL_32} ans as a then
+				if attached {REAL_32} a_expected as e then
+					is_ok := close_enough (a, e)
 				end
 			else
 				is_ok := ans.out ~ a_expected.out

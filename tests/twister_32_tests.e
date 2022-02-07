@@ -1,6 +1,6 @@
 note
 	description: "[
-		Test the {TWISTER_64} class by creating an instance 
+		Test the {TWISTER_64} class by creating an instance
 		`from_array' and comparing the result to values in
 		a test file.
 
@@ -49,8 +49,8 @@ feature -- Basic operations
 				-- {REAL_64}
 			create rng.from_array (init_array)
 			divider (rng.generating_type + "  1000 {REAL_32} numbers")
---			test_reals (rng, directory + "mt19937ar.out")
-			io.put_string ("Fix me!  Real tests don't work for TWISTER_32 %N")
+			test_reals (rng, directory + "mt19937ar.out")
+--			io.put_string ("Fix me!  Real tests don't work for TWISTER_32 %N")
 		end
 
 	twister_constrained
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			env: EXECUTION_ENVIRONMENT
 			s: STRING
 			i: INTEGER
-			r: REAL_32
+			r: REAL_64
 			failed: BOOLEAN
 		do
 			create env
@@ -224,28 +224,29 @@ feature {NONE} -- Implementation
 				from i := 1
 				until i > 10
 				loop
-					f.read_real_32
-					r := f.last_real_32
+					f.read_real_64
+					r := f.last_real_64
 					procedure (agent a_rng.forth, "forth")
-					function (agent a_rng.real_item, "item", r)
+					function (agent a_rng.real_item, "real_item", r)
 					i := i + 1
 				end
 				io.put_string ("%T Checking 11th through 996th REAL random number...   %N")
 				from
 				until i > 997
 				loop
-					f.read_real_32
-					r := f.last_real_32
+					f.read_real_64
+					r := f.last_real_64
 					a_rng.forth
-					assert ("item check: ", close_enough (a_rng.real_item, r))
+	io.put_string ("real_item = " + a_rng.real_item.out + "%N")
+					assert ("item check: ", close_enough_with_tolerance (a_rng.real_item, r, 0.0000001))
 					i := i + 1
 				end
 				io.put_string ("%T Checking 998th to 1000th REAL random number %N")
 				from
 				until i > 1000
 				loop
-					f.read_real_32
-					r := f.last_real_32
+					f.read_real_64
+					r := f.last_real_64
 					procedure (agent a_rng.forth, "forth")
 					function (agent a_rng.real_item, "item", r)
 					i := i + 1

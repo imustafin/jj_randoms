@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="twister_demo" uuid="6917B1C2-7E48-4B5F-94F1-BEBF7FBE475F">
-	<target name="twister_demo">
-		<root class="TWISTER_DEMO" feature="make"/>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="randoms_demo" uuid="6917B1C2-7E48-4B5F-94F1-BEBF7FBE475F">
+	<target name="randoms_demo">
+		<root class="RANDOMS_DEMO" feature="make"/>
 		<file_rule>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -29,6 +29,9 @@
 			<class_option class="MELG">
 				<warning name="obsolete_feature" value="all"/>
 			</class_option>
+			<class_option class="TWISTER_32">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
 		</cluster>
 		<cluster name="demo" location="..\demo\">
 			<class_option class="TWISTER_DEMO">
@@ -46,6 +49,15 @@
 		</cluster>
 		<cluster name="tests" location="..\tests\">
 			<class_option class="MELG_TESTS">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+			<class_option class="JJ_TEST_FACILITIES">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+			<class_option class="TWISTER_32_TESTS">
+				<warning name="obsolete_feature" value="all"/>
+			</class_option>
+			<class_option class="SAFE_DOUBLE_MATH">
 				<warning name="obsolete_feature" value="all"/>
 			</class_option>
 		</cluster>

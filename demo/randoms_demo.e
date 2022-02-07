@@ -8,7 +8,7 @@ note
 	license:   "Eiffel Forum v2 (http://www.eiffel.com/licensing/forum.txt)"
 
 class
-	TWISTER_DEMO
+	RANDOMS_DEMO
 
 create
 	make
