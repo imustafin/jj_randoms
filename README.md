@@ -21,7 +21,7 @@ The MELG-type classes as well as the 64-bit Twister are based on
 - [MELG_44497](./classes/melg_44497.e)
 
 
-To conform to Eiffel's command-query separation principle, these classes depart from the paradym used in the C versions.
+To conform to Eiffel's command-query separation principle, these classes depart from the paradigm used in the C versions.
 
 1.  Getting a random number does not advance the state (i.e. calling **item** multiple times returns the same random number).
 2.  State advancement (i.e. moving to the next random number) is in feature **forth** which calls the non-exported feature **twist**.
