@@ -8,7 +8,7 @@
 		This class generates random numbers of type {NATURAL_64}
 
 		This implementation of the algorithm is modeled after the C-code
-		developed by Matsumot and Takuji.
+		developed by Matsumoto and Takuji.
 		See:
 		  http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/emt.html and
 		  http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/emt64.html
