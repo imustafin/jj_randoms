@@ -24,7 +24,7 @@
 				<warning name="obsolete_feature" value="all"/>
 			</class_option>
 		</library>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="classes" location="..\classes\" recursive="true">
 			<class_option class="MELG">
 				<warning name="obsolete_feature" value="all"/>

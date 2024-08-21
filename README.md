@@ -27,5 +27,4 @@ To conform to Eiffel's command-query separation principle, these classes depart 
 2.  State advancement (i.e. moving to the next random number) is in feature **forth** which calls the non-exported feature **twist**.
 3.  "Tempering" is handled in feature **forth**.
 
-The demo program [RANDOMS_DEMO](./demo/randoms_demo.e) uses [TWISTER\_32\_TESTS](./tests/twister_32_tests.e), [TWISTER\_64\_TESTS](./tests/twister_64_tests.e), and [MELG_TESTS](./tests/melg_tests.e) to display feature calls and the results of the calls.  It also verifies the output against files produced by the original C files.  When the demo system is open in [EiffelStudio](www.eiffel.com), you can also execute some features in [AutoTest](https://www.eiffel.org/doc/eiffelstudio/AutoTest).
-
+The demo program [RANDOMS_DEMO](./demo/randoms_demo.e) (`demo/randoms_demo.ecf` project) uses [TWISTER\_32\_TESTS](./tests/twister_32_tests.e), [TWISTER\_64\_TESTS](./tests/twister_64_tests.e), and [MELG_TESTS](./tests/melg_tests.e) to display feature calls and the results of the calls.  It also verifies the output against files produced by the original C files.  When the demo system is open in [EiffelStudio](www.eiffel.com), you can also execute some features in [AutoTest](https://www.eiffel.org/doc/eiffelstudio/AutoTest).
